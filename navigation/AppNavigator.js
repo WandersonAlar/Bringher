@@ -1,10 +1,10 @@
-import * as PrivateScreens from './PrivateScreens';
-import * as GuestScreens from './GuestScreens';
-import { createSwitchNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
+import PrivateScreens from './PrivateScreens';
+import  GuestScreens from './GuestScreens';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 
 
-const AppStack = createStackNavigator({ ...PrivateScreens });
-const AuthStack = createStackNavigator({ ...GuestScreens }, { defaultNavigationOptions: { header: null } });
+const AppStack = PrivateScreens;
+const AuthStack = GuestScreens;
 
 export default createAppContainer(createSwitchNavigator(
     {

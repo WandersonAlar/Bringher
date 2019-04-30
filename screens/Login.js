@@ -21,7 +21,7 @@ export default class Login extends Component {
             <Input label='Senha' password width={0.8} />
             <Text color='gray' onPress={() => navigation.navigate('Register')}>Não tem uma conta? <Text color='#1abc9c'>Cadastre-se</Text></Text>
             <Block style={{ marginTop: 12 }}>
-              <Button style={{ marginBottom: 12 }} width={0.6} onPress={() => navigation.navigate('MainScreen')}>Login</Button>
+              <Button style={{ marginBottom: 12 }} width={0.6} onPress={() => navigation.navigate('Home')}>Login</Button>
             </Block>
 
           </Block>
