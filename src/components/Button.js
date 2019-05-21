@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
-import Text from './Text'
+import { cor } from '../constants/tema'
+import  Texto  from './Texto'
 
 const { width:WIDTH } = Dimensions.get('window');
 
@@ -13,7 +14,7 @@ export default class Button extends Component {
       ]
     return (
       <TouchableOpacity {...props} style={buttonStyle}>
-       {typeof children === 'string' ? <Text color='#ffffff'>{children}</Text>:children}
+       {typeof children === 'string' ? <Texto color={cor.secondaria}>{children}</Texto>:children}
       </TouchableOpacity>
     )
   }
@@ -21,7 +22,7 @@ export default class Button extends Component {
 
 const styles = StyleSheet.create({
     Button:{
-        backgroundColor: '#1abc9c',
+        backgroundColor: cor.principal,
         borderRadius: 4,
         height: 45,
         alignItems: 'center',

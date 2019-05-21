@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View,TextInput,Dimensions } from 'react-native'
+import { cor, texto } from '../constants/tema';
 
 const { width:WIDTH } = Dimensions.get('window');
 
@@ -12,11 +13,10 @@ export default class Input extends Component {
     ]
     return (
       <View>
-        <View style={styles.label}>
-        <Text style={{textTransform: 'uppercase'}}>{label}</Text>
-        </View>
         <TextInput 
          secureTextEntry={password}
+         placeholder={' '+label}
+         placeholderTextColor={cor.placeHolder}
          autoCapitalize="none"
          autoCorrect={false}
          keyboardType={type}
@@ -29,17 +29,12 @@ export default class Input extends Component {
 }
 
 const styles = StyleSheet.create({
-    label: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 5,
-      },
       Input:{
         height: 45,
-        backgroundColor: 'rgba(41, 128, 185,0.2)',
+        backgroundColor: 'rgba(6, 82, 221,0.1)',
         width: 120,
-        borderColor: '#dfe4ea',
+        marginTop:5,
+        fontSize:texto.size.medio,
         borderRadius: 4,
-        borderWidth: 0.5,
       }
 })
