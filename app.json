@@ -10,8 +10,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Traveller@192.png",
+    "icon": "./assets/Traveller@192.png",
     "splash": {
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
