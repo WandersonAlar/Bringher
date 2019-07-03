@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components/native'
+import { TouchableOpacity } from 'react-native'
 import { Icon } from 'expo';
 
 const ItemMenu = props => (
-    <Container>
+    <Container onPress={props.onPress}>
         <Icone>
             <Icon.Ionicons name={props.icone} size={24} color='#546bfb' />
         </Icone>
@@ -16,7 +17,7 @@ const ItemMenu = props => (
 
 export default ItemMenu;
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
 flex-direction: row;
 margin: 15px 0;
 `

@@ -1,21 +1,42 @@
-import React from 'react'
+import React,{ Fragment } from 'react'
 import styled from 'styled-components/native'
 import { Dimensions, ActivityIndicator } from 'react-native';
 import Vector from 'react-native-vector-icons/FontAwesome';
-import { Icon } from 'expo'
+import { connect } from 'react-redux';
+import { Icon, Facebook } from 'expo'
 import * as Firebase from 'firebase'
+
+import Campo from '../components/Campo'
 
 
 const { width: WIDTH } = Dimensions.get('window')
 
 class LoginScreen extends React.Component {
 
+    static navigationOptions = {
+        header: null
+    }
+
     state = {
         email: '',
         senha: '',
         Carregando: false
     }
-
+    componentWillMount(){
+        this.setState({Carregando: true}); 
+    }
+    componentDidMount(){
+        if(!this.props.Usuario){
+            this.setState({Carregando: false});
+        }
+    }
+    componentWillReceiveProps(props){
+        if(props.Usuario){
+            this.props.navigation.navigate('Home');
+        }else {
+            this.setState({Carregando: false}); 
+        }
+    }
 
     LoginComUsuarioEsenha = async () => {
         const { email, senha } = this.state;
@@ -24,58 +45,69 @@ class LoginScreen extends React.Component {
             this.setState({Carregando: false});
         if(user){
             this.props.navigation.navigate('Home');
+        }else{
+            this.setState({Carregando: false});
         }
         })
     }
 
+    LoginComFacebook = async () => {
+        const { type, token} = await Facebook.logInWithReadPermissionsAsync('368313983801364', {
+         permissions: ['public_profile'],
+       })
+       if (type === 'success') {
+         const credendial = Firebase.auth.FacebookAuthProvider.credential(token);
+         Firebase.auth().signInWithCredential(credendial).catch(err => console.log(err))
+       } else {
+         // type === 'cancel'
+       }
+       }
+     
+    handleChange = ({nome,texto}) => {
+        this.setState({[nome]:texto})
+    }
+
 
     render() {
+        const { navigate } = this.props.navigation;
         return (
-            <Background source={require('../../assets/skyBack.png')}>
-           {this.state.Carregando && <ActivityIndicator size='large' color='rgba(255,255,255,0.3)'/>}  
-                <Logo>
+            <Background source={require('../../assets/Images/skyBack.png')}>
+           {this.state.Carregando ? 
+           <Fragment>
+            <ActivityIndicator size='large' color='rgba(255,255,255,0.3)'/>
+                 <Logo>
                     <Titulo>Bringher</Titulo>
                     <Subtitulo>Bring anything from anywhere.</Subtitulo>
                 </Logo>
-                <Campo>
-                    <Icon.Ionicons
-                        name='ios-person'
-                        size={28}
-                        color='rgba(255,255,255,0.3)'
-                        style={{
-                            position: 'absolute',
-                            top: 6,
-                            left: 15
-                        }}
-                    />
-                    <Input placeholder='E-mail' keyboardType='email-address' onChangeText={t => this.setState({ email: t })} />
-                </Campo>
-                <Campo>
-                    <Icon.Ionicons
-                        name='ios-lock'
-                        size={28}
-                        color='rgba(255,255,255,0.3)'
-                        style={{
-                            position: 'absolute',
-                            top: 6,
-                            left: 15
-                        }}
-                    />
-                    <Input placeholder='Senha' secureTextEntry onChangeText={t => this.setState({ senha: t })} />
-                </Campo>
-                <Cadastro>Não tem uma conta? <Cadastro cor='#4775f2'>Cadastre-se</Cadastro></Cadastro>
+           </Fragment>  :
+            <Fragment>
+               
+                <Campo placeholder='Email' icone='at' nome='email' setState={this.handleChange} />
+                <Campo placeholder='Senha' icone='lock' password nome='senha' setState={this.handleChange} />
+                <Cadastro onPress={()=>navigate('Esqueci')} mt={4} size={14} cor='#4775f2'>Esqueci minha senha!</Cadastro>
                 <Botao onPress={this.LoginComUsuarioEsenha}>
                     <TextoBotao>Fazer login</TextoBotao>
                 </Botao>
 
-                <Vector.Button onPress={() => { }} name='facebook' style={{ backgroundColor: '#4D6FA9', width: WIDTH - 55, height: 45 }}>
+                <Vector.Button onPress={this.LoginComFacebook} name='facebook' style={{ backgroundColor: '#4D6FA9', width: WIDTH - 55, height: 45 }}>
                     Login com Facebook
             </Vector.Button>
+
+            <Cadastro mt={18} size={18} onPress={()=>navigate('Cadastro')}>Não tem uma conta? <Cadastro mt={18} size={18} cor='#4775f2'>Cadastre-se</Cadastro></Cadastro>
+            </Fragment>
+            }  
             </Background>
         )
     }
 }
-export default LoginScreen;
+
+const Select = state => ({
+    Usuario: state.Usuario
+    });
+
+export default connect(Select)(LoginScreen);
+
+
 const Background = styled.ImageBackground`
 flex:1;
 justify-content:center;
@@ -94,29 +126,14 @@ color:#f0f3f5;
 font-weight:600;
 opacity:0.7;
 `
-const Campo = styled.View`
-margin-top: 8px;
-`
+
 const Cadastro = styled.Text`
-margin-top:2px;
+margin-top:${(p)=> p.mt ? p.mt : 3}px;
 color:${(p)=> p.cor ? p.cor : '#f0f3f5'};
+font-size:${(p)=> p.size ? p.size : 14}px;
 font-weight:600;
 `
 
-const Input = styled.TextInput.attrs({
-    placeholderTextColor: 'rgba(255,255,255,0.7)',
-    underlineColorAndroid: 'transparent',
-    autoCompleteType: 'off',
-    autoCapitalize:'none'
-})`
-width:${WIDTH - 55};
-height:45px;
-font-size:16px;
-color:rgba(255,255,255,0.7);
-padding-left:45px;
-border-radius: 5px; 
-background-color: rgba(255,255,255,0.3)
-`
 
 
 const Botao = styled.TouchableOpacity`

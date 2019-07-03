@@ -1,20 +1,26 @@
 import { createAppContainer, createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import MainScreen from '../pages/MainScreen';
 import LoginScreen from '../pages/LoginScreen';
+import CadastroScreen from '../pages/CadastroScreen';
+import EsqueciScreen from '../pages/EsqueciScreen';
+import DetalheScreen from '../pages/DetalheScreen';
 
 const Auth = createStackNavigator({
-    Login:LoginScreen
+    Login: LoginScreen,
+    Cadastro: CadastroScreen,
+    Esqueci: EsqueciScreen
 },{
-    defaultNavigationOptions:{
-        header:null
-    }
+    initialRouteName:'Login'
 })
 const Main = createStackNavigator({
-    Home:MainScreen
+    Home:MainScreen,
+    Detalhe: DetalheScreen
 },{
     defaultNavigationOptions:{
         header:null
-    }
+        
+    },
+    initialRouteName:'Home'
 }
 )
 

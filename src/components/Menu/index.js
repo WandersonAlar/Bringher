@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import { Animated, TouchableOpacity, Dimensions, Image } from 'react-native'
 import { Icon } from 'expo';
 import ItemMenu from './Item';
+import NavigationService from '../../../NavigationService'
+
+import * as Firebase from 'firebase'
 
 
 const { height: ScreenHeight } = Dimensions.get('window');
@@ -21,6 +24,11 @@ class Menu extends React.Component {
         this.toggleMenu();
     }
 
+    logOut = () => {
+        Firebase.auth().signOut();
+        this.props.atualizarUsuario(null)
+        NavigationService.navigate('Login')
+    }
 
     toggleMenu = () => {
         const { MenuOpen } = this.props;
@@ -30,13 +38,13 @@ class Menu extends React.Component {
     }
     render() {
         const { top } = this.state;
-        const { Avatar, nome,fecharMenu } = this.props;
+        const { Avatar, nome,fecharMenu,Usuario } = this.props;
         return (
             <ContainerAnimated style={{ top }}>
                 <Cover>
-                    <Imagem source={require('../../../assets/sunrise-traveling.jpg')}/>
-                    <Titulo>Wanderson</Titulo>
-                    <Email>anderson_alar@outlook.com</Email>
+                    <Imagem source={require('../../../assets/Images/sunrise-traveling.jpg')}/>
+                    <Titulo>{Usuario.displayName}</Titulo>
+                    <Email>{Usuario.Email}</Email>
                 </Cover>
                 <TouchableOpacity onPress={fecharMenu} style={{ position: 'absolute', top: 120, left: '50%', marginLeft: -  22, zIndex:1 }}>
                     <Fechar>
@@ -49,8 +57,10 @@ class Menu extends React.Component {
                 </TouchableOpacity>
                 <Conteudo>
                     <ItemMenu icone='ios-settings' titulo='Conta' texto='Configuração'/>
+                    <ItemMenu icone='ios-filing' titulo='Historico' texto='Pedidos realizados'/>
                     <ItemMenu icone='ios-card' titulo='Pagamento' texto='Metodo de pagamento'/>
-                    <ItemMenu icone='ios-exit' titulo='Log out' texto='Até mais!'/>
+                    <ItemMenu icone='ios-globe' titulo='Estou viajando!' texto='Alterar para o modo viajante'/>
+                    <ItemMenu onPress={this.logOut} icone='ios-exit' titulo='Logout' texto='Até mais!'/>
                 </Conteudo>
             </ContainerAnimated>
         )
@@ -58,11 +68,13 @@ class Menu extends React.Component {
 }
 
 const Select = state => ({
-MenuOpen: state.MenuOpen
+MenuOpen: state.MenuOpen,
+Usuario: state.Usuario
 });
 
 const mapDispacthToProps = dispatch => ({
-    fecharMenu:()=> dispatch({type:'FECHAR_MENU'})
+    fecharMenu:()=> dispatch({type:'FECHAR_MENU'}),
+    atualizarUsuario:  usuario => dispatch({type: 'ATUALIZAR_USUARIO', payload: usuario})
 })
 
 export default connect(Select,mapDispacthToProps)(Menu);

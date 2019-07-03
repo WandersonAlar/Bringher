@@ -1,9 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/native'
-const Card = props => (
-    <CardContainer>
+const Card = props => {
+    const imagem = `https://source.unsplash.com/featured/?eletronic,product&data=${new Date().getMilliseconds()}`
+    
+    return (
+    <CardContainer style={{ elevation: 10}}>
         <Produto>
-            <ImagemProduto source={{ uri: `https://source.unsplash.com/featured/?eletronic,product&data=${new Date().getMilliseconds()}` }} />
+            <ImagemProduto source={{ uri:  imagem}} />
             <TituloProduto>{props.Titulo}</TituloProduto>
         </Produto>
         <Descricao>
@@ -21,20 +24,19 @@ const Card = props => (
             </Item>
         </Descricao>
         <Acoes>
-            <Acao>Ver detalhes</Acao>
+            <Acao onPress={()=>props.navigate('Detalhe',{Produto: {...props, imagem  } })} >Ver detalhes</Acao>
             <Acao>Editar</Acao>
         </Acoes>
     </CardContainer>
-)
+)}
 export default Card;
 
 const CardContainer = styled.View`
 background:#fff;
-width:315px;
+width:94%;
 height:280px;
 border-radius:14px;
-margin-left:20px;
-margin-top:20px;
+margin: 20px 10px;
 margin-bottom:35px;
 box-shadow: 0px 5px 14px rgba(0,0,0,0.15);
 `

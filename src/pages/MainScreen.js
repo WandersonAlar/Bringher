@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 import Container from '../components/Container';
 import { connect } from 'react-redux';
 import ProdutoCard from '../components/ProdutoCard';
-import { ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
+import { ScrollView, SafeAreaView, TouchableOpacity, StatusBar } from 'react-native'
 import { Icon } from 'expo'
 import Menu from '../components/Menu';
 
@@ -13,28 +13,32 @@ const Produtos = [
         Titulo:'Produto 1',
         Valor:'200,52',
         chegarEm:'10',
-        Entrega:'Fortaleza-CE'
+        Entrega:'Fortaleza-CE',
+        Descricao: 'Aenean dapibus nunc nec mauris sodales, vitae tempus sem fringilla. Donec sed ultrices elit. Vestibulum ultricies ante pulvinar, auctor orci ut, cursus metus. Aliquam feugiat arcu a orci hendrerit placerat. Mauris vehicula neque eu magna feugiat congue vel non nisi. Fusce volutpat leo non quam bibendum dictum. Duis est tortor, eleifend nec aliquet non, sagittis ac mauris. '
     },
     {
         id:2,
         Titulo:'Produto 2',
         Valor:'45,20',
         chegarEm:'20',
-        Entrega:'São Paulo-SP'
+        Entrega:'São Paulo-SP',
+        Descricao: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi magna purus, tempus sed dapibus venenatis, mollis a ante. Vivamus maximus commodo ligula, non blandit tortor tempus sed. Etiam gravida at dui id vulputate. Maecenas fermentum mauris ut pretium maximus. Nunc quis sagittis ipsum. Vestibulum nec sapien quis lacus accumsan pretium. Proin nisi lectus, efficitur varius purus ut, elementum ullamcorper elit. Quisque commodo urna quis nunc ullamcorper, quis bibendum lectus lacinia. Phasellus lobortis imperdiet consequat. Nam porttitor tempor dictum'
     },
     {
         id:3,
         Titulo:'Produto 3',
         Valor:'45,20',
         chegarEm:'15',
-        Entrega:'São Paulo-SP'
+        Entrega:'São Paulo-SP',
+        Descricao: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi magna purus, tempus sed dapibus venenatis, mollis a ante. Vivamus maximus commodo ligula, non blandit tortor tempus sed. Etiam gravida at dui id vulputate. Maecenas fermentum mauris ut pretium maximus. Nunc quis sagittis ipsum. Vestibulum nec sapien quis lacus accumsan pretium. Proin nisi lectus, efficitur varius purus ut, elementum ullamcorper elit. Quisque commodo urna quis nunc ullamcorper, quis bibendum lectus lacinia. Phasellus lobortis imperdiet consequat. Nam porttitor tempor dictum'
     },
     {
         id:4,
         Titulo:'Produto 4',
         Valor:'120,20',
         chegarEm:'5',
-        Entrega:'Fortaleza-CE'
+        Entrega:'Fortaleza-CE',
+        Descricao: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi magna purus, tempus sed dapibus venenatis, mollis a ante. Vivamus maximus commodo ligula, non blandit tortor tempus sed. Etiam gravida at dui id vulputate. Maecenas fermentum mauris ut pretium maximus. Nunc quis sagittis ipsum. Vestibulum nec sapien quis lacus accumsan pretium. Proin nisi lectus, efficitur varius purus ut, elementum ullamcorper elit. Quisque commodo urna quis nunc ullamcorper, quis bibendum lectus lacinia. Phasellus lobortis imperdiet consequat. Nam porttitor tempor dictum'
     },
 ]
 
@@ -51,9 +55,10 @@ if (horaAtual < 12) {
 }
 }
 
-const MainScreen = (props) => {
+const MainScreen = ({ Usuario,abrirMenu,navigation }) => {
     return (
         <Container>
+            <StatusBar barStyle='dark-content' />
             <Menu/>
             <SafeAreaView>
             <ScrollView
@@ -61,11 +66,11 @@ const MainScreen = (props) => {
             showsVerticalScrollIndicator={false}
             >
             <UserHeader >
-            <TouchableOpacity onPress={props.abrirMenu} style={{ position:'absolute',top:0,left:0 }}>
-                <Avatar source={{uri:'https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=wanderson'}}/>
+            <TouchableOpacity onPress={abrirMenu} style={{ position:'absolute',top:0,left:0 }}>
+                <Avatar source={{uri:Usuario.photoURL || `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${Usuario.email}`}}/>
                 </TouchableOpacity>
                 <Greet>{MensagemGreet()}</Greet>
-                <Name>Wanderson</Name>
+                <Name>{Usuario.displayName || Usuario.email}</Name>
                 <Icon.Ionicons
                  name='ios-notifications' 
                  size={24} 
@@ -73,8 +78,10 @@ const MainScreen = (props) => {
                  style={{position:'absolute',right:20,top:5}}
                  />
             </UserHeader>
+
             <Title>Seus pedios criados</Title>
-            {Produtos.map(produto => <ProdutoCard key={produto.id} { ...produto } />)}
+     
+            {Produtos.map(produto => <ProdutoCard navigate={navigation.navigate} key={produto.id} { ...produto } />)}
             </ScrollView>
                 <Botao>
                     <TextoBotao>Criar Pedido</TextoBotao>
@@ -83,10 +90,13 @@ const MainScreen = (props) => {
         </Container>
     )
 }
+const Select = state => ({
+    Usuario: state.Usuario
+    });
 const mapDispacthToProps = dispatch => ({
     abrirMenu:()=> dispatch({type:'ABRIR_MENU'})
 })
-export default  connect(null,mapDispacthToProps)(MainScreen);
+export default  connect(Select,mapDispacthToProps)(MainScreen);
 
 const UserHeader = styled.View`
 width:100%;
